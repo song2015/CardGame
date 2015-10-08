@@ -1,0 +1,31 @@
+public class CardTest {	
+
+	public static void main(String[] args){
+
+		Card cardA = new Card(Card.CardPicture.HEART,1); //注意enum用法
+
+		Card cardB = new Card(Card.CardPicture.CLUB, 2);
+		Card cardC = new Card(Card.CardPicture.CLUB, 13);
+
+		System.out.println(cardA);
+		System.out.println(cardB);
+		System.out.println(cardC);
+
+		cardA.compareTo(cardB);
+		cardA.compareTo(cardC);	
+		cardB.compareTo(cardC);	
+		cardA.compareTo(cardA);	
+
+		System.out.println(cardA.toString());		
+
+		System.out.println(cardA.getStringNumber());		
+		System.out.println(cardB.getStringNumber());
+
+		cardA.printOneCard();
+
+		Card[] array1={cardA,cardB,cardC};
+
+		Card.permutation(array1);
+		Card.printCard(array1);
+	}
+}
