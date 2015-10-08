@@ -1,0 +1,204 @@
+import java.util.ArrayList;
+
+
+class Card
+{
+	private static final Card Card = null;
+	private static CardPicture picture;
+	private int number;
+	
+
+	public enum CardPicture{
+		HEART,CLUB,DIAMOND,SPADE
+	}
+
+	public Card(CardPicture p,int num){
+		picture=p;
+		number=num;
+	}
+
+	public static void permutation(Card[] arr){
+		int l= arr.length;
+		if (l>0){
+			if(l==1) {
+				System.out.println(arr[0].toString());
+				return;
+			}
+			else if(l==2){
+				printArray(arr);
+				exchange(arr,0,1);
+				printArray(arr);
+				exchange(arr,0,1);
+				return;
+			}
+			else if(l>2){
+				for(int n=0;n<l;n++){
+					exchange(arr,n,l-1);
+
+					Card[] arrNew = new Card[l-1];
+					for(int i = 0; i < l-1; i++) {
+						arrNew[i] = arr[i];
+					}
+
+					permutation(arrNew);
+					exchange(arr,n,l-1);
+				}
+				return;
+			}	
+		}
+	}
+
+	public static void exchange(Card[] arr1,int i,int j){
+		Card temp;
+		temp=arr1[i];
+		arr1[i]=arr1[j];
+		arr1[j]=temp;
+	}
+
+	public static void printArray(Card arr2[]){
+		int l=arr2.length;
+		for(int k=0;k<l;k++){
+			System.out.print(arr2[k].toString()+" ");//不换行
+		}
+		System.out.println();//换行
+	}
+
+
+	public String toString() {
+		
+		
+		String symbol;
+
+		if (picture == CardPicture.HEART)
+			symbol = "♥";
+		else if (picture == CardPicture.DIAMOND)
+			symbol = "♦";
+		else if (picture == CardPicture.SPADE)
+			symbol = "♠";
+		else
+			symbol = "♣";
+
+		return symbol + "  " + this.getStringNumber() + "  ";	
+	}
+	public String getSymbol(){
+		String symbol;
+
+		if (picture == CardPicture.HEART)
+			symbol = "♥";
+		else if (picture == CardPicture.DIAMOND)
+			symbol = "♦";
+		else if (picture == CardPicture.SPADE)
+			symbol = "♠";
+		else
+			symbol = "♣";
+
+		return symbol;
+	}
+	
+	public void printOneCard() {
+		String symbol;
+
+		if (picture == CardPicture.HEART)
+			symbol = "♥";
+		else if (picture == CardPicture.DIAMOND)
+			symbol = "♦";
+		else if (picture == CardPicture.SPADE)
+			symbol = "♠";
+		else
+			symbol = "♣";
+		
+		System.out.println("┌────────┐");
+		System.out.println("│"+symbol + " " + this.getStringNumber() + "     "+"│");	
+		System.out.println("│        │");
+		System.out.println("│        │");
+		System.out.println("└────────┘");
+	}
+	
+	public static void printSecondCard(Card card,StringBuffer sb1,StringBuffer sb2,StringBuffer sb3,StringBuffer sb4,StringBuffer sb5){
+		String symbol;
+
+		if (picture == CardPicture.HEART)
+			symbol = "♥";
+		else if (picture == CardPicture.DIAMOND)
+			symbol = "♦";
+		else if (picture == CardPicture.SPADE)
+			symbol = "♠";
+		else
+			symbol = "♣";
+		sb1.append("┌────");
+		sb2.append("│"+symbol+" "+card.getStringNumber()+" ");
+		sb3.append("│    ");
+		sb4.append("│    ");
+		sb5.append("└────");
+		
+	}
+	
+	public static void printCard(Card[] arr){
+		if(arr.length==0) return;
+		if(arr.length==1) arr[0].printOneCard();
+		if(arr.length>1){
+			StringBuffer sb1=new StringBuffer();
+			StringBuffer sb2=new StringBuffer();
+			StringBuffer sb3=new StringBuffer();
+			StringBuffer sb4=new StringBuffer();
+			StringBuffer sb5=new StringBuffer();
+			
+			for(int i=0;i<arr.length-1;i++){
+				printSecondCard(arr[i],sb1,sb2,sb3,sb4,sb5);
+			}
+			sb1.append("┌────────┐");
+			sb2.append("│"+arr[arr.length-1].getSymbol()+" "+arr[arr.length-1].getStringNumber()+" ");
+			sb3.append("│        │");
+			sb4.append("│        │");
+			sb5.append("└────────┘");
+			
+			System.out.println(sb1.toString());
+			System.out.println(sb2.toString());
+			System.out.println(sb3.toString());
+			System.out.println(sb4.toString());
+			System.out.println(sb5.toString());
+			
+			
+			//arr[arr.length-1].printOneCard();
+		}
+	}
+
+	
+	
+	public CardPicture getPicture(){
+		return picture;
+	}
+
+	public String getStringNumber(){
+		if (number == 11) {
+			return "J";
+		} else if (number == 12) {
+			return "Q";
+		} else if (number == 13) {
+			return "K";
+		} else if (number == 1){
+			return "A";
+		} else if(number>1&&number<11){
+			return ""+number;
+		}else return "wrong card";
+	}
+
+	public int getNumber(){
+		if(number>0&&number<14)
+			return number;
+		else return -1;
+	}
+
+	public void compareTo(Card card) {
+		if (card == null) System.out.println("something wrong with the card");    //if the card is null,return 2
+		else if(card.getNumber() == this.getNumber())
+			System.out.println("equal");
+		else if( this.getNumber()<card.getNumber() ) 
+			System.out.println("smaller");
+		else if( this.getNumber()>card.getNumber() ) 
+			System.out.println("bigger");
+	}      
+}
+
+
+
