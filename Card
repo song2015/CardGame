@@ -14,31 +14,26 @@ class Card
 		number=num;
 	}
 
-	public static void permutation(Card[] arr){
-		int l= arr.length;
-		if (l>0){
+	public static void permutation(Card[] arr,int i,int j){
+		//int l= arr.length;
+		if (j>i){
+			int l=j-i+1;
 			if(l==1) {
-				System.out.println(arr[0].toString());
+				System.out.println(arr[i].toString());
 				return;
 			}
 			else if(l==2){
 				printArray(arr);
-				exchange(arr,0,1);
+				exchange(arr,i,j);
 				printArray(arr);
-				exchange(arr,0,1);
+				exchange(arr,i,j);
 				return;
 			}
 			else if(l>2){
 				for(int n=0;n<l;n++){
-					exchange(arr,n,l-1);
-
-					Card[] arrNew = new Card[l-1];
-					for(int i = 0; i < l-1; i++) {
-						arrNew[i] = arr[i];
-					}
-
-					permutation(arrNew);
-					exchange(arr,n,l-1);
+					exchange(arr,n,j);
+					permutation(arr,i,j-1);
+					exchange(arr,n,j);		
 				}
 				return;
 			}	
@@ -60,10 +55,7 @@ class Card
 		System.out.println();//换行
 	}
 
-
 	public String toString() {
-
-
 		String symbol;
 
 		if (picture == CardPicture.HEART)
@@ -77,6 +69,7 @@ class Card
 
 		return symbol + "  " + this.getStringNumber() + "  ";	
 	}
+	
 	public String getSymbol(){
 		String symbol;
 
@@ -144,7 +137,7 @@ class Card
 				printSecondCard(arr[i],sb1,sb2,sb3,sb4,sb5);
 			}
 			sb1.append("┌────────┐");
-			sb2.append("│"+arr[arr.length-1].getSymbol()+" "+arr[arr.length-1].getStringNumber()+" ");
+			sb2.append("│"+arr[arr.length-1].getSymbol()+" "+arr[arr.length-1].getStringNumber()+"     "+"│");
 			sb3.append("│        │");
 			sb4.append("│        │");
 			sb5.append("└────────┘");
@@ -181,8 +174,9 @@ class Card
 	}
 
 	public int getNumber(){
-		if(number>0&&number<14)  return number;
-		else  return -1;
+		if(number>0&&number<14)
+			return number;
+		else return -1;
 	}
 
 	public void compareTo(Card card) {
