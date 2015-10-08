@@ -1,12 +1,9 @@
-import java.util.ArrayList;
-
 
 class Card
 {
-	private static final Card Card = null;
 	private static CardPicture picture;
 	private int number;
-	
+
 
 	public enum CardPicture{
 		HEART,CLUB,DIAMOND,SPADE
@@ -65,8 +62,8 @@ class Card
 
 
 	public String toString() {
-		
-		
+
+
 		String symbol;
 
 		if (picture == CardPicture.HEART)
@@ -94,7 +91,7 @@ class Card
 
 		return symbol;
 	}
-	
+
 	public void printOneCard() {
 		String symbol;
 
@@ -106,14 +103,14 @@ class Card
 			symbol = "♠";
 		else
 			symbol = "♣";
-		
+
 		System.out.println("┌────────┐");
 		System.out.println("│"+symbol + " " + this.getStringNumber() + "     "+"│");	
 		System.out.println("│        │");
 		System.out.println("│        │");
 		System.out.println("└────────┘");
 	}
-	
+
 	public static void printSecondCard(Card card,StringBuffer sb1,StringBuffer sb2,StringBuffer sb3,StringBuffer sb4,StringBuffer sb5){
 		String symbol;
 
@@ -130,9 +127,9 @@ class Card
 		sb3.append("│    ");
 		sb4.append("│    ");
 		sb5.append("└────");
-		
+
 	}
-	
+
 	public static void printCard(Card[] arr){
 		if(arr.length==0) return;
 		if(arr.length==1) arr[0].printOneCard();
@@ -142,7 +139,7 @@ class Card
 			StringBuffer sb3=new StringBuffer();
 			StringBuffer sb4=new StringBuffer();
 			StringBuffer sb5=new StringBuffer();
-			
+
 			for(int i=0;i<arr.length-1;i++){
 				printSecondCard(arr[i],sb1,sb2,sb3,sb4,sb5);
 			}
@@ -151,20 +148,20 @@ class Card
 			sb3.append("│        │");
 			sb4.append("│        │");
 			sb5.append("└────────┘");
-			
+
 			System.out.println(sb1.toString());
 			System.out.println(sb2.toString());
 			System.out.println(sb3.toString());
 			System.out.println(sb4.toString());
 			System.out.println(sb5.toString());
-			
-			
+
+
 			//arr[arr.length-1].printOneCard();
 		}
 	}
 
-	
-	
+
+
 	public CardPicture getPicture(){
 		return picture;
 	}
@@ -184,9 +181,8 @@ class Card
 	}
 
 	public int getNumber(){
-		if(number>0&&number<14)
-			return number;
-		else return -1;
+		if(number>0&&number<14)  return number;
+		else  return -1;
 	}
 
 	public void compareTo(Card card) {
