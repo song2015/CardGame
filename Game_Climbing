@@ -1,0 +1,144 @@
+import java.util.ArrayList;
+
+public class Game_Climbing
+{    
+	private boolean played;
+	private ArrayList<Card> pack; // 52 cards
+
+	private Card[] cards;
+	//private int cardAmount;
+	private Player playA, playB;
+	private int scoreA, scoreB;
+
+
+
+	// An inner class defines what should a player do
+	static public abstract class Player
+	{
+		// Return whether the player need to be dealt
+		public abstract boolean needDealt();
+
+		// Get a card from dealer
+		public abstract void getDealt(Card aCard);
+
+		// Return if have cards on hand
+		public abstract boolean hasCard();
+
+		// Get the cards placed by the other uses
+		public abstract void showPlacedCards(ArrayList<Card> cards);
+
+		// Place a card/ some cards
+		public abstract ArrayList<Card> placeCard();
+
+		// Store the card on hand
+		protected ArrayList<Card> cardsInHand;
+	}
+
+
+	public Game_Climbing()
+	{
+		played = false;
+		scoreA = 0;
+		scoreB = 0;
+		initialize();
+	}
+
+	private void initialize()
+	{       
+		playA = new Player_Computer();
+		playB = new Player_Computer();
+
+		cards=new Card[104];
+
+		for(int i=0;i<52;i++){
+			for(int j=0;j<4;j++){
+				switch(j){
+				case 0:
+					cards[i+j]=new Card( Card.CardPicture.HEART,i%13+1);
+					break;
+				case 1:
+					cards[i+j]=new Card( Card.CardPicture.CLUB,i%13+1);
+					break;
+				case 2:
+					cards[i+j]=new Card( Card.CardPicture.DIAMOND,i%13+1);
+					break;
+				case 3:
+					cards[i+j]=new Card( Card.CardPicture.SPADE,i%13+1);
+					break;
+				}
+			}	
+		}
+
+		shuffle();	
+	}
+
+	private void shuffle()
+	{
+		int t;
+
+		Card[] temp=new Card[52];
+		for(int i=0;i<52;i++){
+			t=(int)(Math.random()*52);
+
+			for(int j=0;j<52;j++){
+				if(temp[t]==null){
+					temp[t]=new Card(cards[i].getPicture(),cards[i].getNumber());
+					break;
+				}else{
+					t=(t+1)%52;				 
+				} 
+			}
+		}
+
+		for(int i=0;i<52;i++){
+			cards[i]=temp[i];
+		}
+	}
+
+	public void play()
+	{
+		// Can only play once
+		if(played)
+			return;
+		played = true;
+		
+		int n=0;
+		int CardNumberA=0;
+		int CardNumberB=0;
+
+		// Deal cards, use first 16 cards
+		for(int i = 0; i < 8; i++) // 8 cards per person
+		{
+			if(playA.needDealt())
+			{
+				playA.getDealt(cards[n]);
+				n++;
+				CardNumberA++;
+			}
+			if(playB.needDealt())
+			{                       
+				playB.getDealt(cards[n]);
+				n++;
+				CardNumberB++;
+			}
+		}
+
+		// Play games, compare card value
+		while(playA.hasCard() && playA.hasCard())
+		{
+			ArrayList<Card> cardsFromA = playA.placeCard();
+			playB.showPlacedCards(cardsFromA);
+			ArrayList<Card> cardsFromB = playB.placeCard();
+			if(cardsFromA.get(0).compareTo(cardsFromB.get(0)) > 0)
+				scoreA++;
+			else if(cardsFromA.get(0).compareTo(cardsFromB.get(0)) > 0)
+				scoreB++;
+		}
+
+		System.out.println(scoreA > scoreB? "A win!": (scoreA == scoreB? "Draw!": "B win!"));
+	}
+
+	// Other useful methods
+
+
+}
