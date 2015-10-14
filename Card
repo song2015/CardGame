@@ -15,7 +15,6 @@ class Card
 	}
 
 	public static void permutation(Card[] arr,int i,int j){
-		//int l= arr.length;
 		if (j>i){
 			int l=j-i+1;
 			if(l==1) {
@@ -69,7 +68,7 @@ class Card
 
 		return symbol + "  " + this.getStringNumber() + "  ";	
 	}
-	
+
 	public String getSymbol(){
 		String symbol;
 
@@ -147,13 +146,8 @@ class Card
 			System.out.println(sb3.toString());
 			System.out.println(sb4.toString());
 			System.out.println(sb5.toString());
-
-
-			//arr[arr.length-1].printOneCard();
 		}
 	}
-
-
 
 	public CardPicture getPicture(){
 		return picture;
@@ -188,6 +182,17 @@ class Card
 		else if( this.getNumber()>card.getNumber() ) 
 			System.out.println("bigger");
 	}      
+
+	public int compareToReturnNumber (Card card) {
+		if(card.getNumber() == this.getNumber())
+			return 0;
+		else if( this.getNumber()<card.getNumber() ) 
+			return -1;
+		else 
+			return 1;
+
+	}  
+
 }
 
 
