@@ -1,0 +1,8 @@
+
+public class CardGameTest {
+	public static void main(String[] args){
+		
+		Game_Climbing game=new Game_Climbing();
+		game.play();	
+	}
+}
