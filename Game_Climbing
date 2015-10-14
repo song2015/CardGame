@@ -1,15 +1,17 @@
 import java.util.ArrayList;
+import java.util.Scanner;
 
 public class Game_Climbing
 {    
 	private boolean played;
-	private ArrayList<Card> pack; // 52 cards
+	//private ArrayList<Card> pack; // 52 cards
 
 	private Card[] cards;
 	//private int cardAmount;
 	private Player playA, playB;
 	private int scoreA, scoreB;
-
+	private int cardLeft=52;
+	//private ArrayList<Card>  computerCards;   
 
 
 	// An inner class defines what should a player do
@@ -21,14 +23,8 @@ public class Game_Climbing
 		// Get a card from dealer
 		public abstract void getDealt(Card aCard);
 
-		// Return if have cards on hand
-		public abstract boolean hasCard();
-
-		// Get the cards placed by the other uses
-		public abstract void showPlacedCards(ArrayList<Card> cards);
-
 		// Place a card/ some cards
-		public abstract ArrayList<Card> placeCard();
+		public abstract Card placeCard();
 
 		// Store the card on hand
 		protected ArrayList<Card> cardsInHand;
@@ -40,15 +36,11 @@ public class Game_Climbing
 		played = false;
 		scoreA = 0;
 		scoreB = 0;
-		initialize();
-	}
-
-	private void initialize()
-	{       
+		       
 		playA = new Player_Computer();
 		playB = new Player_Computer();
 
-		cards=new Card[104];
+		cards=new Card[52];
 
 		for(int i=0;i<52;i++){
 			for(int j=0;j<4;j++){
@@ -67,7 +59,7 @@ public class Game_Climbing
 					break;
 				}
 			}	
-		}
+		}//generate 52 cards
 
 		shuffle();	
 	}
@@ -97,11 +89,13 @@ public class Game_Climbing
 
 	public void play()
 	{
+		String playerInput = "";
+
 		// Can only play once
 		if(played)
 			return;
 		played = true;
-		
+
 		int n=0;
 		int CardNumberA=0;
 		int CardNumberB=0;
@@ -114,28 +108,49 @@ public class Game_Climbing
 				playA.getDealt(cards[n]);
 				n++;
 				CardNumberA++;
+				setCardLeft(getCardLeft() - 1);
 			}
 			if(playB.needDealt())
 			{                       
 				playB.getDealt(cards[n]);
 				n++;
 				CardNumberB++;
+				setCardLeft(getCardLeft() - 1);
 			}
 		}
 
 		// Play games, compare card value
-		while(playA.hasCard() && playA.hasCard())
+		while(CardNumberA!=0 && CardNumberB!=0)
 		{
-			ArrayList<Card> cardsFromA = playA.placeCard();
-			playB.showPlacedCards(cardsFromA);
-			ArrayList<Card> cardsFromB = playB.placeCard();
-			if(cardsFromA.get(0).compareTo(cardsFromB.get(0)) > 0)
+			Card cardA=playA.placeCard();
+			Card cardB=playB.placeCard();
+
+			if(cardA.compareToReturnNumber(cardB)>0)
 				scoreA++;
-			else if(cardsFromA.get(0).compareTo(cardsFromB.get(0)) > 0)
+			if(cardA.compareToReturnNumber(cardB)<0)
 				scoreB++;
 		}
 
+
 		System.out.println(scoreA > scoreB? "A win!": (scoreA == scoreB? "Draw!": "B win!"));
+
+		System.out.println("continue playing this game（Y/N）？");
+		playerInput = extracted().nextLine();
+
+		if(playerInput.equals("N"))
+			played = true;
+	}
+
+	private Scanner extracted() {
+		return new Scanner(System.in);
+	}
+
+	public int getCardLeft() {
+		return cardLeft;
+	}
+
+	public void setCardLeft(int cardLeft) {
+		this.cardLeft = cardLeft;
 	}
 
 	// Other useful methods
