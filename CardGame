@@ -83,11 +83,13 @@ public class CardGame {
 				deal(computerCards);
 				CardNumberB++;
 			}
-
+			int num=0;
 			while(CardNumberA!=0 && CardNumberB!=0)
 			{
-				Card cardA=playerCards.get(0);
-				Card cardB=computerCards.get(0);
+
+				Card cardA=playerCards.get(num);
+				Card cardB=computerCards.get(num);
+				num++;
 				CardNumberA--;
 				CardNumberB--;
 				System.out.println("player card:"+cardA.toString());
@@ -96,11 +98,11 @@ public class CardGame {
 				if(cardA.compareToReturnNumber(cardB)>0){
 					scoreA++;
 					System.out.println("player wins");
-					break;
+					continue;
 				}else if(cardA.compareToReturnNumber(cardB)<0){
 					scoreB++;
 					System.out.println("computer wins");
-					break;
+					continue;
 				}else{
 					System.out.println("The match ended in a draw.");
 				}
