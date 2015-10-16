@@ -43,7 +43,7 @@ public class CardGame {
 
 			for(int j=0;j<52;j++){
 				if(temp[t]==null){
-					temp[t]=new Card(cards[i].getPicture(),cards[i].getNumber());
+					temp[t]=cards[i];
 					break;
 				}else{
 					t=(t+1)%52;				 
