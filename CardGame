@@ -1,0 +1,118 @@
+import java.util.ArrayList;
+import java.util.Scanner;
+
+
+public class CardGame {
+	private Card[] cards;
+	private int cardSent;
+
+	ArrayList<Card> playerCards=new ArrayList<>();
+	ArrayList<Card> computerCards=new ArrayList<>();
+
+	public CardGame(){
+		cards=new Card[52];
+
+		for(int i=0;i<52;i+=4){
+			for(int j=0;j<4;j++){
+				switch(j){
+				case 0:
+					cards[i+j]=new Card( Card.CardPicture.HEART,i%13+1);
+					break;
+				case 1:
+					cards[i+j]=new Card( Card.CardPicture.CLUB,i%13+1);
+					break;
+				case 2:
+					cards[i+j]=new Card( Card.CardPicture.DIAMOND,i%13+1);
+					break;
+				case 3:
+					cards[i+j]=new Card( Card.CardPicture.SPADE,i%13+1);
+					break;
+				}
+			}		
+		}//generate 52 cards
+	}
+
+
+	public void shuffle(){
+		cardSent = 0;
+		int t;
+		Card[] temp=new Card[52];
+
+		for(int i=0;i<52;i++){
+			t=(int)(Math.random()*52);
+
+			for(int j=0;j<52;j++){
+				if(temp[t]==null){
+					temp[t]=new Card(cards[i].getPicture(),cards[i].getNumber());
+					break;
+				}else{
+					t=(t+1)%52;				 
+				} 
+			}
+		}
+
+		for(int i=0;i<52;i++){
+			cards[i]=temp[i];
+		}
+	}
+
+	public void deal(ArrayList<Card> c){
+		c.add(cards[cardSent++]);
+	}
+
+	public void start() {
+		boolean finish = false;
+
+		int scoreB=0;
+		int scoreA=0;
+
+		if(finish)
+			return;
+		else{
+			finish = true;
+
+			shuffle();
+
+			int CardNumberA=0;
+			int CardNumberB=0;
+
+			for(int i = 0; i < 8; i++) // 8 cards per person
+			{
+				deal(playerCards);
+				CardNumberA++;
+				deal(computerCards);
+				CardNumberB++;
+			}
+
+			while(CardNumberA!=0 && CardNumberB!=0)
+			{
+				Card cardA=playerCards.get(0);
+				Card cardB=computerCards.get(0);
+				CardNumberA--;
+				CardNumberB--;
+				System.out.println("player card:"+cardA.toString());
+				System.out.println("computer card:"+cardB.toString());
+
+				if(cardA.compareToReturnNumber(cardB)>0){
+					scoreA++;
+					System.out.println("player wins");
+					break;
+				}else if(cardA.compareToReturnNumber(cardB)<0){
+					scoreB++;
+					System.out.println("computer wins");
+					break;
+				}else{
+					System.out.println("The match ended in a draw.");
+				}
+			}
+
+			if(scoreA>scoreB){
+				System.out.println("In total,player wins.");
+			}else if (scoreA<scoreB){
+				System.out.println("In total,computer wins.");
+			}else{
+				System.out.println("In total,the match ended in a draw.");
+			}
+		}
+	}
+}
