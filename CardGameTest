@@ -3,6 +3,8 @@ public class CardGameTest {
 	public static void main(String[] args){
 		
 		CardGame cardGame=new CardGame();
-		cardGame.start();	
+		cardGame.start();
+		
 	}
+
 }
