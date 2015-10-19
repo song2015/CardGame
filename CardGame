@@ -1,120 +1,239 @@
+
+
 import java.util.ArrayList;
+import java.util.Random;
 import java.util.Scanner;
 
-
 public class CardGame {
-	private Card[] cards;
+	Scanner sc = new Scanner(System.in);
+	public Card[] cards;
 	private int cardSent;
 
-	ArrayList<Card> playerCards=new ArrayList<>();
-	ArrayList<Card> computerCards=new ArrayList<>();
+	
+	Player player = null;
+	Player computer = null;
 
-	public CardGame(){
-		cards=new Card[52];
+	public CardGame() {
+		cards = new Card[52];
+		cardSent = cards.length;
 
-		for(int i=0;i<52;i+=4){
-			for(int j=0;j<4;j++){
-				switch(j){
-				case 0:
-					cards[i+j]=new Card( Card.CardPicture.HEART,i%13+1);
-					break;
-				case 1:
-					cards[i+j]=new Card( Card.CardPicture.CLUB,i%13+1);
-					break;
-				case 2:
-					cards[i+j]=new Card( Card.CardPicture.DIAMOND,i%13+1);
-					break;
-				case 3:
-					cards[i+j]=new Card( Card.CardPicture.SPADE,i%13+1);
-					break;
-				}
-			}		
-		}//generate 52 cards
+		for (int i = 0; i < 52; i += 4) {
+			int num = i % 13 + 1;
+			cards[i] = new Card(Card.CardPicture.HEART, num);
+			cards[i + 1] = new Card(Card.CardPicture.CLUB, num);
+			cards[i + 2] = new Card(Card.CardPicture.DIAMOND, num);
+			cards[i + 3] = new Card(Card.CardPicture.SPADE, num);
+		}// generate 52 cards
 	}
 
-
-	public void shuffle(){
-		cardSent = 0;
+	public void shuffle() {
 		int t;
-		Card[] temp=new Card[52];
+		Card[] temp = new Card[52];
 
-		for(int i=0;i<52;i++){
-			t=(int)(Math.random()*52);
+		for (int i = 0; i < 52; i++) {
+			t = (int) (Math.random() * 52);
 
-			for(int j=0;j<52;j++){
-				if(temp[t]==null){
-					temp[t]=cards[i];
+			for (int j = 0; j < 52; j++) {
+				if (temp[t] == null) {
+					temp[t] = cards[i];
 					break;
-				}else{
-					t=(t+1)%52;				 
-				} 
+				} else {
+					t = (t + 1) % 52;
+				}
 			}
 		}
 
-		for(int i=0;i<52;i++){
-			cards[i]=temp[i];
+		for (int i = 0; i < 52; i++) {
+			cards[i] = temp[i];
 		}
 	}
 
-	public void deal(ArrayList<Card> c){
-		c.add(cards[cardSent++]);
+	public void deal(ArrayList<Card> c) {
+		c.add(cards[--cardSent]);
+		
+		
+		cards[cardSent] = null;
 	}
 
 	public void start() {
-		boolean finish = false;
 
-		int scoreB=0;
-		int scoreA=0;
+		shuffle();
+		
+		initPlayer();
 
-		if(finish)
-			return;
-		else{
-			finish = true;
+		int CardNumberA = 0;
+		int CardNumberB = 0;
 
-			shuffle();
+		for (int i = 0; i < 8; i++) // 8 cards per person
+		{
+			deal(player.getCardList());
+			CardNumberA++;
+			deal(computer.getCardList());
+			CardNumberB++;
+		}
+		
+		Card playerPreCard = null;//保存玩家上把出的牌
+		Random rand = new Random();
+		
+		
+		while (CardNumberA != 0 && CardNumberB != 0) {
 
-			int CardNumberA=0;
-			int CardNumberB=0;
-
-			for(int i = 0; i < 8; i++) // 8 cards per person
-			{
-				deal(playerCards);
-				CardNumberA++;
-				deal(computerCards);
-				CardNumberB++;
-			}
-			int num=0;
-			while(CardNumberA!=0 && CardNumberB!=0)
-			{
-
-				Card cardA=playerCards.get(num);
-				Card cardB=computerCards.get(num);
-				num++;
-				CardNumberA--;
-				CardNumberB--;
-				System.out.println("player card:"+cardA.toString());
-				System.out.println("computer card:"+cardB.toString());
-
-				if(cardA.compareToReturnNumber(cardB)>0){
-					scoreA++;
-					System.out.println("player wins");
-					continue;
-				}else if(cardA.compareToReturnNumber(cardB)<0){
-					scoreB++;
-					System.out.println("computer wins");
-					continue;
-				}else{
-					System.out.println("The match ended in a draw.");
+			Card cardA = null;
+			Card cardB = null;
+			int computerNum = 0;
+			int playerNum = 0;
+			
+			if (playerPreCard == null) {
+				//computer随机选一张
+				computerNum = rand.nextInt(CardNumberB);
+			}else{
+				//computer的最大点数
+				int computerMaxNum=0;
+				for (Card card : computer.getCardList()) {
+					if (card.getNumber() > computerMaxNum) {
+						computerMaxNum = card.getNumber();
+					}
+				}
+				
+				if (computerMaxNum > playerPreCard.getNumber()) {
+					//computer随机选择大于上把human点数的牌
+					int tempNum = 0;
+					while (true) {
+						tempNum = rand.nextInt(CardNumberB);
+						if (computer.getCardList().get(tempNum).compareToReturnNumber(playerPreCard)>0) {
+							computerNum = tempNum;
+							break;
+						}
+					}
+				}else{//要是没有大于human上一把出的点数的，就随机出一张
+					computerNum = rand.nextInt(CardNumberB);
 				}
 			}
-
-			if(scoreA>scoreB){
-				System.out.println("In total,player wins.");
-			}else if (scoreA<scoreB){
-				System.out.println("In total,computer wins.");
-			}else{
-				System.out.println("In total,the match ended in a draw.");
+			cardB = computer.getCardList().get(computerNum);
+			
+			CardNumberB--;// 补缺上次那个程序没有remove牌的缺陷
+			
+			computer.getCardList().remove(computerNum);
+			
+			//human选出第几张
+			Card.printCard(player.getCardList());
+			
+			while (true) {
+				System.out.println("Player "+player.getName()+", Please choose which one do you want to show?");
+				String num = sc.next();
+				try {
+					playerNum = Integer.parseInt(num);
+					if (playerNum <= 0 || playerNum > CardNumberA) {
+						throw new Exception();
+					}
+				} catch (Exception e) {
+					System.out.println("You type the wrong number,please type again.");
+					new RuntimeException(e);
+					continue;
+				}
+				break;
 			}
+			cardA = player.getCardList().get(playerNum-1);
+			playerPreCard = cardA;//保存玩家上把出牌
+			
+			CardNumberA--;//to remove
+			
+			player.getCardList().remove(playerNum-1);
+			
+			System.out.println("\n----------------------------Small Resault--------------------------------");
+			System.out.println(player.getName()+"   card:" + cardA.toString());
+			System.out.println(computer.getName()+"   card:" + cardB.toString());
+			
+			if (cardA.compareToReturnNumber(cardB) > 0) {
+				
+				player.setScore(player.getScore() + 1);
+				System.out.println(player.getName()+"  wins");
+				
+			} else if (cardA.compareToReturnNumber(cardB) < 0) {
+				
+				computer.setScore(computer.getScore() + 1);
+				System.out.println(computer.getName()+"  wins");
+				
+			} else {
+				System.out.println("The match ended in a draw.");
+			}
+			System.out.println("--------------------------------------------------------------------");
+			
+			if (cardSent > 0) {
+				
+				System.out.println("Do you need more cards?？[y/n]");
+				String needCard = sc.next();
+				if ("y".equals(needCard)) {
+					
+					int count = 0;
+					while (true) {
+						System.out.println("Please type in how many cards you need.The number of cards left is "+cardSent+",and you can have half of them at most.");
+						String countStr = sc.next();
+						try {
+							count = Integer.parseInt(countStr);
+							if (count * 2 > cardSent || count <=0) {
+								throw new Exception();
+							}
+						} catch (Exception e) {
+							System.out.println("You type the wrong number,please type again.");
+							new RuntimeException(e);
+							continue;
+						}
+						break;
+					}
+					for (int i = 0; i < count; i++)
+					{
+						deal(player.getCardList());
+						CardNumberA++;
+						deal(computer.getCardList());
+						CardNumberB++;
+					}
+				}else{
+					System.out.println("No card needed.");
+				}
+			}
+			
 		}
+
+
+		System.out.println("\n\n-----------------------------Total Result-------------------------------");
+		System.out.println(player.getName()+" score："+player.getScore());
+		System.out.println(computer.getName()+" score："+computer.getScore());
+		if (player.getScore() > computer.getScore()) {
+			System.out.println("In total,"+player.getName()+" wins.");
+		} else if (player.getScore() < computer.getScore()) {
+			System.out.println("In total,"+computer.getName()+" wins.");
+		} else {
+			System.out.println("In total,the match ended in a draw.");
+		}
+		System.out.println("------------------------------------------------------------------------");
+	}
+
+	private void initPlayer() {
+		System.out.println("Please type in your name:");
+		String playerName = sc.next();
+		String cpuName;
+		
+		while (true) {
+			System.out.println("Please choose your opponent：[1.Shrek    2.Mickey Mouse    3.Bambi    4.Simba]");
+			String cpuId = sc.next();
+			if ("1".equals(cpuId)) {
+				cpuName = "Shrek";
+			}else if ("2".equals(cpuId)) {
+				cpuName = "Mickey Mouse";
+			}else if ("3".equals(cpuId)) {
+				cpuName = "Bambi";
+			}else if ("4".equals(cpuId)) {
+				cpuName = "Simba";
+			}else{
+				System.out.println("You type the wrong number,please type again.");
+				continue;
+			}
+			break;
+		}
+		player = new Player();
+		player.setName(playerName);
+		computer = new Player();
+		computer.setName(cpuName);
 	}
 }
