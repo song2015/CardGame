@@ -1,8 +1,5 @@
 
-
-
-public class CardTest {	
-
+public class CardTest {
 	public static void main(String[] args){
 
 		Card cardA = new Card(Card.CardPicture.HEART,1); //注意enum用法
@@ -14,10 +11,10 @@ public class CardTest {
 		System.out.println(cardB);
 		System.out.println(cardC);
 
-		cardA.compareTo(cardB);
-		cardA.compareTo(cardC);	
-		cardB.compareTo(cardC);	
-		cardA.compareTo(cardA);	
+		System.out.println(cardA.compareTo(cardB));
+			
+		cardB.compareCards(cardC);	
+		cardA.compareCards(cardA);	
 
 		System.out.println(cardA.toString());		
 
@@ -31,6 +28,5 @@ public class CardTest {
 		Card.permutation(array1,0,2);
 		Card.printCard(array1);
 	}
+
 }
-
-
